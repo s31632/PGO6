@@ -1,0 +1,171 @@
+class Employee {
+    private String firstName;
+    private String lastName;
+    private String address;
+    private String email;
+    private String pesel; // Social security number
+    private int yearOfEmployment;
+
+    public Employee(String firstName, String lastName, String address, String email, String pesel, int yearOfEmployment) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.email = email;
+        this.pesel = pesel;
+        this.yearOfEmployment = yearOfEmployment;
+    }
+    public int calculateSalary() {
+        int baseSalary = 3000;
+        int yearBonus = (2024 - yearOfEmployment) * 1000;
+        return baseSalary + yearBonus;
+    }
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPesel() {
+        return pesel;
+    }
+}
+class Developer extends Employee {
+    private ArrayList<Technology> technologies;
+
+    public Developer(String firstName, String lastName, String address, String email, String pesel, int yearOfEmployment) {
+        super(firstName, lastName, address, email, pesel, yearOfEmployment);
+        technologies = new ArrayList<>();
+    }
+
+    // Method to add technology
+    public void addTechnology(Technology technology) {
+        technologies.add(technology);
+    }
+    public int calculateSalary() {
+        int baseSalary = super.calculateSalary();
+        int technologyBonus = 0;
+        for (Technology tech : technologies) {
+            technologyBonus += tech.getBonus();
+        }
+        return baseSalary + technologyBonus;
+    }
+}
+class Tester extends Employee {
+    private ArrayList<String> testTypes;
+    public Tester(String firstName, String lastName, String address, String email, String pesel, int yearOfEmployment) {
+        super(firstName, lastName, address, email, pesel, yearOfEmployment);
+        testTypes = new ArrayList<>();
+    }
+
+    // Method to add test type
+    public void addTestType(String testType) {
+        testTypes.add(testType);
+    }
+    public int calculateSalary() {
+        int baseSalary = super.calculateSalary();
+        int testBonus = testTypes.size() * 300;
+        return baseSalary + testBonus;
+    }
+}
+class Manager extends Employee {
+    private ArrayList<Goal> goals;
+    public Manager(String firstName, String lastName, String address, String email, String pesel, int yearOfEmployment) {
+        super(firstName, lastName, address, email, pesel, yearOfEmployment);
+        goals = new ArrayList<>();
+    }
+
+    public void addGoal(Goal goal) {
+        goals.add(goal);
+    }
+
+    public int calculateSalary() {
+        int baseSalary = super.calculateSalary();
+        int bonus = 0;
+        for (Goal goal : goals) {
+            if (goal.isAchievedInCurrentMonth()) {
+                bonus += goal.getBonusAmount();
+            }
+        }
+        return baseSalary + bonus;
+    }
+}
+class Technology {
+    private String name;
+    private int bonus;
+
+    public Technology(String name, int bonus) {
+        this.name = name;
+        this.bonus = bonus;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public int getBonus() {
+        return bonus;
+    }
+}
+class Goal {
+    private String name;
+    private int year;
+    private int month;
+    private int day;
+    private int bonusAmount;
+    public Goal(int year, int month, int day, String name, int bonusAmount) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.name = name;
+        this.bonusAmount = bonusAmount;
+    }
+    public boolean isAchievedInCurrentMonth() {
+        int currentYear = 2024;
+        int currentMonth = 5; // May
+        return currentYear == year && currentMonth == month;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public int getBonusAmount() {
+        return bonusAmount;
+    }
+}
+
+public class Program {
+    public static void main(String[] args) {
+        ArrayList<Employee> employees = new ArrayList<>();
+        Developer dev = new Developer("John", "Doe", "New York", "john@doe.com", "123456789", 2020);
+        Technology t = new Technology("Java", 800);
+        dev.addTechnology(t);
+        employees.add(dev);
+
+        Tester tester = new Tester("Jane", "Smith", "Los Angeles", "jane@smith.com", "987654321", 2021);
+        tester.addTestType("UI/UX");
+        employees.add(tester);
+
+     
+        Manager manager = new Manager("Bob", "Johnson", "Chicago", "bob@johnson.com", "1122334455", 2019);
+        Goal g = new Goal(2010, 10, 15, "Implementing FB login", 1000);
+        manager.addGoal(g);
+        employees.add(manager);
+
+    
+        int totalAmount = 0;
+        for (Employee employee : employees) {
+            totalAmount += employee.calculateSalary();
+        }
+
+        System.out.println("Total amount to be paid this month: " + totalAmount + " PLN");
+    }
+}
